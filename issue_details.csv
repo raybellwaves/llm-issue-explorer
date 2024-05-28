@@ -1,0 +1,20 @@
+,assignees,body,closed,closedAt,comments,createdAt,id,labels,milestone,number,projectCards,projectItems,reactionGroups,state,title,updatedAt,url,author.id,author.is_bot,author.login,author.name
+0,[],This product sucks!,False,,[],2024-05-28T17:29:40Z,I_kwDOMBv3fs6KYJOy,[],,1,[],[],[],OPEN,This product sucks!,2024-05-28T17:29:40Z,https://github.com/raybellwaves/llm-issue-explorer/issues/1,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+1,[],This is the best product ever!,False,,[],2024-05-28T17:29:58Z,I_kwDOMBv3fs6KYJYQ,[],,2,[],[],[],OPEN,This is the best product ever!,2024-05-28T17:29:58Z,https://github.com/raybellwaves/llm-issue-explorer/issues/2,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+2,[],A comment in this issue has a thumbs up!,False,,[],2024-05-28T20:50:13Z,I_kwDOMBv3fs6KZWJ2,[],,3,[],[],"[{'content': 'THUMBS_UP', 'users': {'totalCount': 1}}]",OPEN,A comment in this issue has a thumbs up!,2024-05-28T20:50:13Z,https://github.com/raybellwaves/llm-issue-explorer/issues/3,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+3,[],A comment in this issue has a thumbs down!,False,,[],2024-05-28T20:50:52Z,I_kwDOMBv3fs6KZWZB,[],,4,[],[],"[{'content': 'THUMBS_DOWN', 'users': {'totalCount': 1}}]",OPEN,A comment in this issue has a thumbs down!,2024-05-28T20:50:52Z,https://github.com/raybellwaves/llm-issue-explorer/issues/4,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+4,[],Issue 5,False,,[],2024-05-28T21:04:21Z,I_kwDOMBv3fs6KZa5W,[],,5,[],[],[],OPEN,Issue 5,2024-05-28T21:04:21Z,https://github.com/raybellwaves/llm-issue-explorer/issues/5,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+5,[]," Sure, here's an example of a fake GitHub issue:
+Title: Fix broken link in README file
+Description: The link to the project documentation is broken and leads to a 404 error. Please fix it as soon as possible.
+Labels: bug, documentation
+Assigned To: johnsmith
+Milestone: v1.0.0
+Steps to Reproduce:
+
+1. Go to the project's README file on GitHub.
+2. Click on the link to the documentation.
+3. The page displays a 404 error message.
+Expected Result: The link should lead to the correct documentation page without any errors.
+Actual Result: The link is broken and leads to an error page.",False,,[],2024-05-28T21:15:42Z,I_kwDOMBv3fs6KZehy,[],,6,[],[],[],OPEN,Generated Issue,2024-05-28T21:15:42Z,https://github.com/raybellwaves/llm-issue-explorer/issues/6,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
+6,[],Can't install,False,,"[{'id': 'IC_kwDOMBv3fs5_UrWw', 'author': {'login': 'raybellwaves'}, 'authorAssociation': 'OWNER', 'body': 'Fix now!', 'createdAt': '2024-05-28T21:17:02Z', 'includesCreatedEdit': False, 'isMinimized': False, 'minimizedReason': '', 'reactionGroups': [{'content': 'THUMBS_UP', 'users': {'totalCount': 1}}], 'url': 'https://github.com/raybellwaves/llm-issue-explorer/issues/7#issuecomment-2136126896', 'viewerDidAuthor': True}, {'id': 'IC_kwDOMBv3fs5_UrYY', 'author': {'login': 'raybellwaves'}, 'authorAssociation': 'OWNER', 'body': 'Fix!', 'createdAt': '2024-05-28T21:17:07Z', 'includesCreatedEdit': False, 'isMinimized': False, 'minimizedReason': '', 'reactionGroups': [{'content': 'THUMBS_UP', 'users': {'totalCount': 1}}], 'url': 'https://github.com/raybellwaves/llm-issue-explorer/issues/7#issuecomment-2136127000', 'viewerDidAuthor': True}, {'id': 'IC_kwDOMBv3fs5_UrZm', 'author': {'login': 'raybellwaves'}, 'authorAssociation': 'OWNER', 'body': 'Now!', 'createdAt': '2024-05-28T21:17:12Z', 'includesCreatedEdit': False, 'isMinimized': False, 'minimizedReason': '', 'reactionGroups': [{'content': 'THUMBS_UP', 'users': {'totalCount': 1}}], 'url': 'https://github.com/raybellwaves/llm-issue-explorer/issues/7#issuecomment-2136127078', 'viewerDidAuthor': True}]",2024-05-28T21:16:55Z,I_kwDOMBv3fs6KZe38,[],,7,[],[],"[{'content': 'THUMBS_DOWN', 'users': {'totalCount': 1}}]",OPEN,Can't install,2024-05-28T21:17:13Z,https://github.com/raybellwaves/llm-issue-explorer/issues/7,MDQ6VXNlcjE3MTYyNzI0,False,raybellwaves,Ray Bell
