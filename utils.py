@@ -1,9 +1,19 @@
 # Create a csv file of the issues
 #
 # python utils.py
+import ast
 import os
 import json
+import subprocess
 import pandas as pd
+
+
+def pull_issues():
+    subprocess.run(["./pull_issues.zsh"], capture_output=True, text=True)
+
+
+def pull_posters():
+    subprocess.run(["./pull_posters.zsh"], capture_output=True, text=True)
 
 
 def concat_issues():
@@ -40,13 +50,76 @@ def concat_posters():
         _df = pd.json_normalize(data)
         df = pd.concat([df, _df], axis=0).reset_index(drop=True)
 
-    df.to_csv("poster_details.csv")
+    df.to_csv("all_poster_details.csv")
 
 
 def join_csvs():
     df = pd.read_csv("issue_details.csv")
-    df2 = pd.read_csv("poster_details.csv").rename(columns={"login": "author.login"})
+    df2 = pd.read_csv("all_poster_details.csv").rename(
+        columns={"login": "author.login"}
+    )
     df = df.merge(df2, on="author.login")
+
+    # Helper columns to steer the LLM
+    def extract_reaction_counts(reaction_groups):
+        reactions = {
+            "THUMBS_UP": 0,
+            "THUMBS_DOWN": 0,
+            "LAUGH": 0,
+            "HOORAY": 0,
+            "CONFUSED": 0,
+            "HEART": 0,
+            "ROCKET": 0,
+            "EYES": 0,
+        }
+
+        if reaction_groups != "[]":
+            reaction_list = ast.literal_eval(reaction_groups)
+            for reaction in reaction_list:
+                content = reaction["content"]
+                count = reaction["users"]["totalCount"]
+                if content in reactions:
+                    reactions[content] += count
+
+        return pd.Series(
+            [
+                reactions["THUMBS_UP"],
+                reactions["THUMBS_DOWN"],
+                reactions["LAUGH"],
+                reactions["HOORAY"],
+                reactions["CONFUSED"],
+                reactions["HEART"],
+                reactions["ROCKET"],
+                reactions["EYES"],
+            ]
+        )
+
+    df[
+        [
+            "n_body_reactions_thumbs_up",
+            "n_body_reactions_thumbs_down",
+            "n_body_reactions_laugh",
+            "n_body_reactions_hooray",
+            "n_body_reactions_confused",
+            "n_body_reactions_heart",
+            "n_body_reactions_rocket",
+            "n_body_reactions_eyes",
+        ]
+    ] = df["reactionGroups"].apply(extract_reaction_counts)
+
+    def extract_commenters(comments):
+        if comments == "[]":
+            return "[]"
+
+        commenters = set()
+        comment_list = ast.literal_eval(comments)
+        for comment in comment_list:
+            commenters.add(comment["author"]["login"])
+
+        return str(list(commenters))
+
+    df["commenters"] = df["comments"].apply(extract_commenters)
+
     df.to_csv("issue_details_with_posters.csv")
 
 
@@ -109,9 +182,13 @@ def chat_to_dataset_using_pandasai():
 
 
 if __name__ == "__main__":
-    # concat_issues()
-    # concat_posters()
-    # join_csvs()
+    # python utils.py
+    #
+    pull_issues()
+    concat_issues()
+    pull_posters()
+    concat_posters()
+    join_csvs()
     # upload_csv_to_hugging_face_hub()
-    chat_to_dataset_using_langchain()
+    # chat_to_dataset_using_langchain()
     # pass
