@@ -1,0 +1,11 @@
+datasets
+huggingface_hub
+ipython
+langchain
+langchain-experimental
+langchain-openai
+llm
+pandas
+pandasai
+tabulate
+transformers
