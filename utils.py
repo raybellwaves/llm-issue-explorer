@@ -148,6 +148,62 @@ def concat_posters():
     df.to_csv("all_poster_details.csv")
 
 
+def concat_posters_and_commenters():
+    json_files = []
+    for file in os.listdir(os.getcwd()):
+        if file.startswith("poster_"):
+            json_files.append(file)
+    json_files = sorted(json_files)
+    df = pd.DataFrame()
+    for file in json_files:
+        print(file)
+        with open(file, "r") as f:
+            data = json.load(f)
+        _df = pd.json_normalize(data)
+        df = pd.concat([df, _df], axis=0).reset_index(drop=True)
+
+    json_files = []
+    for file in os.listdir(os.getcwd()):
+        if file.startswith("commenter_"):
+            json_files.append(file)
+    json_files = sorted(json_files)
+    for file in json_files:
+        print(file)
+        with open(file, "r") as f:
+            data = json.load(f)
+        _df = pd.json_normalize(data)
+        df = pd.concat([df, _df], axis=0).reset_index(drop=True)
+
+    # Helper columns to steer the LLM
+    def location_to_lat_lon(location):
+        import numpy as np
+
+        lat_lon = {
+            "lat": np.nan,
+            "lon": np.nan,
+        }
+        if location != np.nan:
+            from geopy.geocoders import Nominatim
+
+            geolocator = Nominatim(user_agent="_")
+            try:
+                geocoded_location = geolocator.geocode(location)
+                lat_lon["lat"] = geocoded_location.latitude
+                lat_lon["lon"] = geocoded_location.longitude
+            except AttributeError:
+                pass
+
+        return pd.Series(
+            [
+                lat_lon["lat"],
+                lat_lon["lon"],
+            ]
+        )
+
+    df[["location_lat", "location_lon"]] = df["location"].apply(location_to_lat_lon)
+    df.to_csv("all_poster_commenter_details.csv")
+
+
 def join_csvs():
     df = pd.read_csv("issue_details.csv")
     df2 = pd.read_csv("all_poster_details.csv").rename(
@@ -269,9 +325,9 @@ if __name__ == "__main__":
     # python utils.py
     #
     # pull_issues()
-    concat_issues()
+    # concat_issues()
     # pull_posters()
-    # concat_posters()
+    concat_posters_and_commenters()
     # join_csvs()
     # upload_csv_to_hugging_face_hub()
     # chat_to_dataset_using_langchain()
