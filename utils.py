@@ -90,7 +90,12 @@ def concat_issues():
     df["commenters"] = df["comments"].apply(extract_commenters)
 
     df.to_csv("issue_details.csv")
+    # Get unique posters
     df["author.login"].drop_duplicates().to_csv("issue_posters.csv")
+    # Get unique commenters
+    df["commenters"].explode().drop_duplicates().reset_index(drop=True).to_csv(
+        "issue_commenters.csv"
+    )
 
 
 def concat_posters():
