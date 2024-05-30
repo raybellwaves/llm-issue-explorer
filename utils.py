@@ -16,6 +16,10 @@ def pull_posters():
     subprocess.run(["./pull_posters.zsh"], capture_output=True, text=True)
 
 
+def pull_commenters():
+    subprocess.run(["./pull_commenters.zsh"], capture_output=True, text=True)
+
+
 def concat_issues():
     json_files = []
     for file in os.listdir(os.getcwd()):
