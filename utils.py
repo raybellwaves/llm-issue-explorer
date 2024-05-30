@@ -31,35 +31,6 @@ def concat_issues():
         _df = pd.json_normalize(data)
         df = pd.concat([df, _df], axis=0).reset_index(drop=True)
 
-    df.to_csv("issue_details.csv")
-    df["author.login"].drop_duplicates().to_csv("issue_posters.csv")
-
-
-def concat_posters():
-    json_files = []
-    for file in os.listdir(os.getcwd()):
-        if file.startswith("poster_"):
-            json_files.append(file)
-    json_files = sorted(json_files)
-
-    df = pd.DataFrame()
-    for file in json_files:
-        print(file)
-        with open(file, "r") as f:
-            data = json.load(f)
-        _df = pd.json_normalize(data)
-        df = pd.concat([df, _df], axis=0).reset_index(drop=True)
-
-    df.to_csv("all_poster_details.csv")
-
-
-def join_csvs():
-    df = pd.read_csv("issue_details.csv")
-    df2 = pd.read_csv("all_poster_details.csv").rename(
-        columns={"login": "author.login"}
-    )
-    df = df.merge(df2, on="author.login")
-
     # Helper columns to steer the LLM
     def extract_reaction_counts(reaction_groups):
         reactions = {
@@ -73,9 +44,8 @@ def join_csvs():
             "EYES": 0,
         }
 
-        if reaction_groups != "[]":
-            reaction_list = ast.literal_eval(reaction_groups)
-            for reaction in reaction_list:
+        if reaction_groups != []:
+            for reaction in reaction_groups:
                 content = reaction["content"]
                 count = reaction["users"]["totalCount"]
                 if content in reactions:
@@ -108,19 +78,119 @@ def join_csvs():
     ] = df["reactionGroups"].apply(extract_reaction_counts)
 
     def extract_commenters(comments):
-        if comments == "[]":
-            return "[]"
+        if comments == []:
+            return []
 
         commenters = set()
-        comment_list = ast.literal_eval(comments)
-        for comment in comment_list:
+        for comment in comments:
             commenters.add(comment["author"]["login"])
 
-        return str(list(commenters))
+        return list(commenters)
 
     df["commenters"] = df["comments"].apply(extract_commenters)
 
+    df.to_csv("issue_details.csv")
+    df["author.login"].drop_duplicates().to_csv("issue_posters.csv")
+
+
+def concat_posters():
+    json_files = []
+    for file in os.listdir(os.getcwd()):
+        if file.startswith("poster_"):
+            json_files.append(file)
+    json_files = sorted(json_files)
+
+    df = pd.DataFrame()
+    for file in json_files:
+        print(file)
+        with open(file, "r") as f:
+            data = json.load(f)
+        _df = pd.json_normalize(data)
+        df = pd.concat([df, _df], axis=0).reset_index(drop=True)
+
+    # Helper columns to steer the LLM
+    def location_to_lat_lon(location):
+        import numpy as np
+
+        lat_lon = {
+            "lat": np.nan,
+            "lon": np.nan,
+        }
+        if location != np.nan:
+            from geopy.geocoders import Nominatim
+
+            geolocator = Nominatim(user_agent="_")
+            try:
+                geocoded_location = geolocator.geocode(location)
+                lat_lon["lat"] = geocoded_location.latitude
+                lat_lon["lon"] = geocoded_location.longitude
+            except AttributeError:
+                pass
+
+        return pd.Series(
+            [
+                lat_lon["lat"],
+                lat_lon["lon"],
+            ]
+        )
+
+    df[["location_lat", "location_lon"]] = df["location"].apply(location_to_lat_lon)
+
+    df.to_csv("all_poster_details.csv")
+
+
+def join_csvs():
+    df = pd.read_csv("issue_details.csv")
+    df2 = pd.read_csv("all_poster_details.csv").rename(
+        columns={"login": "author.login"}
+    )
+    df = df.merge(df2, on="author.login")
+
     df.to_csv("issue_details_with_posters.csv")
+
+    # projectCards? projectItems?
+    sel_cols = [
+        "body",
+        "comments",
+        "commenters",
+        "createdAt",
+        "labels",
+        "milestone",
+        "reactionGroups",
+        "n_body_reactions_thumbs_up",
+        "n_body_reactions_thumbs_down",
+        "n_body_reactions_laugh",
+        "n_body_reactions_hooray",
+        "n_body_reactions_confused",
+        "n_body_reactions_heart",
+        "n_body_reactions_rocket",
+        "n_body_reactions_eyes",
+        "title",
+        "updatedAt",
+        "author.id",
+        "author.login",
+        "author.name",
+        "starred_url",
+        "subscriptions_url",
+        "organizations_url",
+        "repos_url",
+        "name",
+        "company",
+        "blog",
+        "location",
+        "location_lat",
+        "location_lon",
+        "email",
+        "hireable",
+        "bio",
+        "twitter_username",
+        "followers",
+        "following",
+        "created_at",
+        "updated_at",
+    ]
+    df[sel_cols].to_csv("issue_details_with_posters_small.csv")
+    df[sel_cols].to_parquet("issue_details_with_posters_small.parquet")
 
 
 def upload_csv_to_hugging_face_hub():
@@ -181,14 +251,19 @@ def chat_to_dataset_using_pandasai():
     )
 
 
+def plots():
+    # See plots.ipynb
+    pass
+
+
 if __name__ == "__main__":
     # python utils.py
     #
-    pull_issues()
+    # pull_issues()
     concat_issues()
-    pull_posters()
-    concat_posters()
-    join_csvs()
+    # pull_posters()
+    # concat_posters()
+    # join_csvs()
     # upload_csv_to_hugging_face_hub()
     # chat_to_dataset_using_langchain()
     # pass

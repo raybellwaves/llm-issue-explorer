@@ -1,11 +1,16 @@
 datasets
 huggingface_hub
+geopy
 ipython
+ipykernel
 langchain
 langchain-experimental
 langchain-openai
 llm
+matplotlib
 pandas
 pandasai
+pyarrow
+streamlit
 tabulate
 transformers
