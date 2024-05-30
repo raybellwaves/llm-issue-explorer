@@ -12,5 +12,6 @@ pandas
 pandasai
 pyarrow
 streamlit
+streamlit-authenticator
 tabulate
 transformers
